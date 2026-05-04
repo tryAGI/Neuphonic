@@ -1,0 +1,614 @@
+openapi: 3.0.3
+info:
+  title: Neuphonic API
+  version: 0.1.0
+  description: |
+    Focused manual OpenAPI source for Neuphonic's public Text-to-Speech, voice,
+    and agent management HTTP APIs.
+
+    Neuphonic also exposes WebSocket APIs at `wss://api.neuphonic.com/speak/{lang_code}`
+    and `wss://api.neuphonic.com/agents`; those transports are documented here for
+    completeness, but this OpenAPI document only models HTTP and SSE operations.
+  termsOfService: https://docs.neuphonic.com/
+externalDocs:
+  description: Neuphonic documentation
+  url: https://docs.neuphonic.com/
+servers:
+  - url: https://api.neuphonic.com
+    description: Production API
+security:
+  - ApiKeyAuth: []
+tags:
+  - name: Tts
+    description: Text-to-speech endpoints.
+  - name: Voices
+    description: Voice library and voice cloning endpoints.
+  - name: Agents
+    description: Agent management endpoints.
+paths:
+  /ping:
+    get:
+      operationId: ping
+      summary: Ping
+      tags:
+        - Tts
+      security: []
+      responses:
+        '200':
+          description: API health response.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /sse/auth:
+    post:
+      operationId: createSseJwtToken
+      summary: Create SSE JWT token
+      description: Exchange an API key for a short-lived JWT token for lower-latency SSE requests.
+      tags:
+        - Tts
+      parameters:
+        - name: expiration
+          in: query
+          required: false
+          description: Token lifetime in seconds.
+          schema:
+            type: integer
+            default: 3600
+            minimum: 1
+      responses:
+        '200':
+          description: JWT token response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtTokenResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /sse/speak/{lang_code}:
+    post:
+      operationId: speakWithSse
+      summary: Text to speech over SSE
+      description: |
+        Generate speech from text using Server-Sent Events. Each event contains
+        base64 encoded audio plus the source text and sampling rate.
+      tags:
+        - Tts
+      parameters:
+        - name: lang_code
+          in: path
+          required: true
+          description: Language code for the desired language.
+          schema:
+            type: string
+            example: en
+        - name: api_key
+          in: query
+          required: false
+          description: Optional API key query parameter supported by the SSE transport.
+          schema:
+            type: string
+            nullable: true
+        - name: jwt_token
+          in: query
+          required: false
+          description: Optional JWT token query parameter returned by the SSE auth endpoint.
+          schema:
+            type: string
+            nullable: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TtsRequest'
+      responses:
+        '200':
+          description: Streaming text-to-speech events.
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/TtsEventResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /voices:
+    get:
+      operationId: listVoices
+      summary: List voices
+      description: List voices available in the caller's voice library.
+      tags:
+        - Voices
+      responses:
+        '200':
+          description: Voice list response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListVoicesResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    post:
+      operationId: cloneVoice
+      summary: Clone voice
+      description: Clone a new voice from an uploaded audio sample.
+      tags:
+        - Voices
+      parameters:
+        - name: voice_name
+          in: query
+          required: true
+          description: Name for the cloned voice.
+          schema:
+            type: string
+        - name: voice_tags
+          in: query
+          required: false
+          description: Comma-separated tags describing the voice.
+          schema:
+            type: string
+        - name: lang_code
+          in: query
+          required: false
+          description: Language code for the voice sample.
+          schema:
+            type: string
+            default: en
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CloneVoiceRequest'
+      responses:
+        '200':
+          description: Voice clone response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoiceMutationResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /voices/{voice_id}:
+    patch:
+      operationId: updateVoice
+      summary: Update cloned voice
+      description: Update a cloned voice's name, tags, or reference audio.
+      tags:
+        - Voices
+      parameters:
+        - $ref: '#/components/parameters/VoiceId'
+        - name: new_voice_name
+          in: query
+          required: false
+          description: Updated voice name.
+          schema:
+            type: string
+        - name: new_voice_tags
+          in: query
+          required: false
+          description: Updated comma-separated voice tags.
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UpdateVoiceRequest'
+      responses:
+        '200':
+          description: Voice update response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoiceMutationResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      operationId: deleteVoice
+      summary: Delete cloned voice
+      description: Delete a cloned voice by voice ID.
+      tags:
+        - Voices
+      parameters:
+        - $ref: '#/components/parameters/VoiceId'
+      responses:
+        '200':
+          description: Voice delete response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoiceMutationResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /agents:
+    get:
+      operationId: listAgents
+      summary: List agents
+      description: List agents that belong to the caller.
+      tags:
+        - Agents
+      responses:
+        '200':
+          description: Agent list response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAgentsResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    post:
+      operationId: createAgent
+      summary: Create agent
+      description: Create a Neuphonic conversational agent.
+      tags:
+        - Agents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAgentRequest'
+      responses:
+        '200':
+          description: Agent create response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentMutationResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /agents/{agent_id}:
+    get:
+      operationId: getAgent
+      summary: Get agent
+      description: Get details for a specific agent.
+      tags:
+        - Agents
+      parameters:
+        - $ref: '#/components/parameters/AgentId'
+      responses:
+        '200':
+          description: Agent response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAgentResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      operationId: deleteAgent
+      summary: Delete agent
+      description: Delete a specific agent.
+      tags:
+        - Agents
+      parameters:
+        - $ref: '#/components/parameters/AgentId'
+      responses:
+        '200':
+          description: Agent delete response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentMutationResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+  parameters:
+    VoiceId:
+      name: voice_id
+      in: path
+      required: true
+      description: Voice ID.
+      schema:
+        type: string
+    AgentId:
+      name: agent_id
+      in: path
+      required: true
+      description: Agent ID.
+      schema:
+        type: string
+  responses:
+    ValidationError:
+      description: Validation error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HTTPValidationError'
+  schemas:
+    TtsRequest:
+      type: object
+      required:
+        - text
+      additionalProperties: true
+      properties:
+        text:
+          type: string
+          description: Text to synthesize.
+          example: Hello, world!
+        speed:
+          type: number
+          format: double
+          description: Playback speed. Values are snapped by the service to slow, normal, or fast.
+          default: 1.0
+          example: 1.0
+        temperature:
+          type: number
+          format: double
+          nullable: true
+          description: Randomness introduced into text-to-speech generation.
+          minimum: 0
+          maximum: 1
+          example: 0.7
+        lang_code:
+          type: string
+          description: Language code for the desired language.
+          default: en
+          example: en
+        voice_id:
+          type: string
+          nullable: true
+          description: Voice ID to use for synthesis.
+          example: e564ba7e-aa8d-46a2-96a8-8dffedade48f
+        sampling_rate:
+          type: integer
+          description: Sampling rate of returned audio.
+          default: 24000
+          enum:
+            - 8000
+            - 16000
+            - 22050
+            - 24000
+        encoding:
+          type: string
+          description: Encoding of returned audio.
+          default: pcm_linear
+          enum:
+            - pcm_linear
+            - pcm_mulaw
+        output_format:
+          type: string
+          nullable: true
+          description: Optional output format for generated audio.
+          enum:
+            - wav
+            - mp3
+    TtsEventResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        data:
+          $ref: '#/components/schemas/TtsEventData'
+        metadata:
+          type: object
+          additionalProperties: true
+        status_code:
+          type: integer
+          description: Status code for the streamed event.
+          example: 200
+        errors:
+          type: array
+          items:
+            type: string
+    TtsEventData:
+      type: object
+      additionalProperties: true
+      properties:
+        audio:
+          type: string
+          format: byte
+          description: Base64 encoded audio bytes.
+        text:
+          type: string
+          description: Text corresponding to the audio snippet.
+        sampling_rate:
+          type: integer
+          description: Sampling rate for the audio snippet.
+          example: 24000
+        stop:
+          type: boolean
+          description: Whether this event terminates a streamed message.
+        context_id:
+          type: string
+          description: Optional context ID supplied with the input text.
+    JwtTokenResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          properties:
+            jwt_token:
+              type: string
+              description: Short-lived JWT token for SSE authentication.
+          required:
+            - jwt_token
+      required:
+        - data
+    ListVoicesResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          properties:
+            voices:
+              type: array
+              items:
+                $ref: '#/components/schemas/Voice'
+          required:
+            - voices
+      required:
+        - data
+    Voice:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: string
+          description: Voice record ID.
+        voice_id:
+          type: string
+          description: Voice ID used by TTS endpoints.
+        name:
+          type: string
+          description: Display name.
+        tags:
+          type: array
+          nullable: true
+          items:
+            type: string
+        model_availability:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        type:
+          type: string
+        lang_code:
+          type: string
+      required:
+        - id
+        - name
+    CloneVoiceRequest:
+      type: object
+      required:
+        - voice_file
+      properties:
+        voice_file:
+          type: string
+          format: binary
+          description: Audio file to use as the voice reference sample.
+    UpdateVoiceRequest:
+      type: object
+      properties:
+        new_voice_file:
+          type: string
+          format: binary
+          description: New audio file to use as the voice reference sample.
+    VoiceMutationResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          properties:
+            message:
+              type: string
+            voice_id:
+              type: string
+    ListAgentsResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          properties:
+            agents:
+              type: array
+              items:
+                $ref: '#/components/schemas/Agent'
+          required:
+            - agents
+      required:
+        - data
+    GetAgentResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          properties:
+            agent:
+              $ref: '#/components/schemas/Agent'
+          required:
+            - agent
+      required:
+        - data
+    Agent:
+      type: object
+      additionalProperties: true
+      properties:
+        agent_id:
+          type: string
+        name:
+          type: string
+        prompt:
+          type: string
+          nullable: true
+        greeting:
+          type: string
+          nullable: true
+      required:
+        - agent_id
+        - name
+    CreateAgentRequest:
+      type: object
+      required:
+        - name
+      additionalProperties: true
+      properties:
+        name:
+          type: string
+          description: Agent name.
+        prompt:
+          type: string
+          nullable: true
+          description: System prompt for the agent.
+        greeting:
+          type: string
+          nullable: true
+          description: Initial greeting for the agent.
+    AgentMutationResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          properties:
+            message:
+              type: string
+            agent_id:
+              type: string
+    HTTPValidationError:
+      type: object
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    ValidationError:
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      properties:
+        loc:
+          type: array
+          items:
+            oneOf:
+              - type: string
+              - type: integer
+        msg:
+          type: string
+        type:
+          type: string
