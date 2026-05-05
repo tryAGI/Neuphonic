@@ -9,6 +9,7 @@ set -euo pipefail
 # - https://github.com/neuphonic/neuphonic-js
 # - https://api.neuphonic.com/openapi.json
 
+dotnet tool install --global autosdk.cli --prerelease
 rm -rf Generated
 autosdk generate openapi.yaml \
   --security-scheme ApiKey:Header:X-API-KEY \
