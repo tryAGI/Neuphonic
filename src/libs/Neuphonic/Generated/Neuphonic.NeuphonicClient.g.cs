@@ -47,7 +47,7 @@ namespace Neuphonic
         /// <summary>
         /// Agent management endpoints.
         /// </summary>
-        public AgentsClient Agents => new AgentsClient(HttpClient, authorizations: Authorizations, options: Options)
+        public AgentsClient Agents => new AgentsClient(HttpClient, baseUri: null, authorizations: Authorizations, options: Options)
         {
             ReadResponseAsString = ReadResponseAsString,
             JsonSerializerContext = JsonSerializerContext,
@@ -56,7 +56,7 @@ namespace Neuphonic
         /// <summary>
         /// Text-to-speech endpoints.
         /// </summary>
-        public TtsClient Tts => new TtsClient(HttpClient, authorizations: Authorizations, options: Options)
+        public TtsClient Tts => new TtsClient(HttpClient, baseUri: null, authorizations: Authorizations, options: Options)
         {
             ReadResponseAsString = ReadResponseAsString,
             JsonSerializerContext = JsonSerializerContext,
@@ -65,7 +65,7 @@ namespace Neuphonic
         /// <summary>
         /// Voice library and voice cloning endpoints.
         /// </summary>
-        public VoicesClient Voices => new VoicesClient(HttpClient, authorizations: Authorizations, options: Options)
+        public VoicesClient Voices => new VoicesClient(HttpClient, baseUri: null, authorizations: Authorizations, options: Options)
         {
             ReadResponseAsString = ReadResponseAsString,
             JsonSerializerContext = JsonSerializerContext,
@@ -104,10 +104,10 @@ namespace Neuphonic
         /// <param name="options">Client-wide request defaults such as headers, query parameters, retries, and timeout.</param>
         /// <param name="disposeHttpClient">Dispose the HttpClient when the instance is disposed. True by default.</param>
         public NeuphonicClient(
-            global::System.Net.Http.HttpClient? httpClient = null,
-            global::System.Uri? baseUri = null,
-            global::System.Collections.Generic.List<global::Neuphonic.EndPointAuthorization>? authorizations = null,
-            global::Neuphonic.AutoSDKClientOptions? options = null,
+            global::System.Net.Http.HttpClient? httpClient,
+            global::System.Uri? baseUri,
+            global::System.Collections.Generic.List<global::Neuphonic.EndPointAuthorization>? authorizations,
+            global::Neuphonic.AutoSDKClientOptions? options,
             bool disposeHttpClient = true)
         {
 
