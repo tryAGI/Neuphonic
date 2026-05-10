@@ -40,5 +40,6 @@ namespace Neuphonic
         public GetAgentResponseData()
         {
         }
+
     }
 }

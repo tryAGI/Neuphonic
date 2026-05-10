@@ -42,5 +42,6 @@ namespace Neuphonic
         public JwtTokenResponseData()
         {
         }
+
     }
 }

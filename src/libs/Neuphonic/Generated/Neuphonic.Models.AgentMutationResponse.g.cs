@@ -39,5 +39,6 @@ namespace Neuphonic
         public AgentMutationResponse()
         {
         }
+
     }
 }
