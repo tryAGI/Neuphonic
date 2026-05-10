@@ -88,5 +88,6 @@ namespace Neuphonic
         public TtsEventData()
         {
         }
+
     }
 }

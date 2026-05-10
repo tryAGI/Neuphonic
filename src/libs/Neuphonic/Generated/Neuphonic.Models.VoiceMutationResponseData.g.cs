@@ -48,5 +48,6 @@ namespace Neuphonic
         public VoiceMutationResponseData()
         {
         }
+
     }
 }

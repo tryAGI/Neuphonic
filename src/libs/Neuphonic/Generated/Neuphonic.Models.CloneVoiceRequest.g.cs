@@ -54,5 +54,6 @@ namespace Neuphonic
         public CloneVoiceRequest()
         {
         }
+
     }
 }
