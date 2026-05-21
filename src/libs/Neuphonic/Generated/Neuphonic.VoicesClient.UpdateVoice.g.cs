@@ -67,6 +67,38 @@ namespace Neuphonic
             global::Neuphonic.AutoSDKRequestOptions? requestOptions = default,
             global::System.Threading.CancellationToken cancellationToken = default)
         {
+            var __response = await UpdateVoiceAsResponseAsync(
+                voiceId: voiceId,
+
+                request: request,
+                newVoiceName: newVoiceName,
+                newVoiceTags: newVoiceTags,
+                requestOptions: requestOptions,
+                cancellationToken: cancellationToken
+            ).ConfigureAwait(false);
+
+            return __response.Body;
+        }
+        /// <summary>
+        /// Update cloned voice<br/>
+        /// Update a cloned voice's name, tags, or reference audio.
+        /// </summary>
+        /// <param name="voiceId"></param>
+        /// <param name="newVoiceName"></param>
+        /// <param name="newVoiceTags"></param>
+        /// <param name="request"></param>
+        /// <param name="requestOptions">Per-request overrides such as headers, query parameters, timeout, retries, and response buffering.</param>
+        /// <param name="cancellationToken">The token to cancel the operation with</param>
+        /// <exception cref="global::Neuphonic.ApiException"></exception>
+        public async global::System.Threading.Tasks.Task<global::Neuphonic.AutoSDKHttpResponse<global::Neuphonic.VoiceMutationResponse>> UpdateVoiceAsResponseAsync(
+            string voiceId,
+
+            global::Neuphonic.UpdateVoiceRequest request,
+            string? newVoiceName = default,
+            string? newVoiceTags = default,
+            global::Neuphonic.AutoSDKRequestOptions? requestOptions = default,
+            global::System.Threading.CancellationToken cancellationToken = default)
+        {
             request = request ?? throw new global::System.ArgumentNullException(nameof(request));
 
             PrepareArguments(
@@ -96,16 +128,17 @@ namespace Neuphonic
             var __maxAttempts = global::Neuphonic.AutoSDKRequestOptionsSupport.GetMaxAttempts(
                 clientOptions: Options,
                 requestOptions: requestOptions,
-                supportsRetry: true);
+                supportsRetry: false);
 
             global::System.Net.Http.HttpRequestMessage __CreateHttpRequest()
             {
+
                             var __pathBuilder = new global::Neuphonic.PathBuilder(
                                 path: $"/voices/{voiceId}",
-                                baseUri: HttpClient.BaseAddress); 
+                                baseUri: HttpClient.BaseAddress);
                             __pathBuilder
                                 .AddOptionalParameter("new_voice_name", newVoiceName)
-                                .AddOptionalParameter("new_voice_tags", newVoiceTags) 
+                                .AddOptionalParameter("new_voice_tags", newVoiceTags)
                                 ;
                             var __path = __pathBuilder.ToString();
                 __path = global::Neuphonic.AutoSDKRequestOptionsSupport.AppendQueryParameters(
@@ -136,24 +169,28 @@ namespace Neuphonic
                     __httpRequest.Headers.Add(__authorization.Name, __authorization.Value);
                 } 
             }
+
                             var __httpRequestContent = new global::System.Net.Http.MultipartFormDataContent();
                             __httpRequestContent.Add(
                                 content: new global::System.Net.Http.StringContent(voiceId ?? string.Empty),
                                 name: "\"voice_id\"");
+
                             if (newVoiceName != default)
                             {
 
                                 __httpRequestContent.Add(
                                     content: new global::System.Net.Http.StringContent(newVoiceName ?? string.Empty),
                                     name: "\"new_voice_name\"");
-                            } 
+
+                            }
                             if (newVoiceTags != default)
                             {
 
                                 __httpRequestContent.Add(
                                     content: new global::System.Net.Http.StringContent(newVoiceTags ?? string.Empty),
                                     name: "\"new_voice_tags\"");
-                            } 
+
+                            }
                             if (request.NewVoiceFile != default)
                             {
 
@@ -194,8 +231,11 @@ namespace Neuphonic
                                 {
                                     __contentNewVoiceFile.Headers.ContentDisposition.FileNameStar = null;
                                 }
+
                             }
+
                             __httpRequest.Content = __httpRequestContent;
+
                 global::Neuphonic.AutoSDKRequestOptionsSupport.ApplyHeaders(
                     request: __httpRequest,
                     clientHeaders: Options.Headers,
@@ -240,6 +280,8 @@ namespace Neuphonic
                                 attempt: __attempt,
                                 maxAttempts: __maxAttempts,
                                 willRetry: false,
+                                retryDelay: null,
+                                retryReason: global::System.String.Empty,
                                 cancellationToken: __effectiveCancellationToken)).ConfigureAwait(false);
                     try
                     {
@@ -250,6 +292,11 @@ namespace Neuphonic
                     }
                     catch (global::System.Net.Http.HttpRequestException __exception)
                     {
+                        var __retryDelay = global::Neuphonic.AutoSDKRequestOptionsSupport.GetRetryDelay(
+                            clientOptions: Options,
+                            requestOptions: requestOptions,
+                            response: null,
+                            attempt: __attempt);
                         var __willRetry = __attempt < __maxAttempts && !__effectiveCancellationToken.IsCancellationRequested;
                         await global::Neuphonic.AutoSDKRequestOptionsSupport.OnAfterErrorAsync(
                             clientOptions: Options,
@@ -267,6 +314,8 @@ namespace Neuphonic
                                 attempt: __attempt,
                                 maxAttempts: __maxAttempts,
                                 willRetry: __willRetry,
+                                retryDelay: __willRetry ? __retryDelay : (global::System.TimeSpan?)null,
+                                retryReason: "exception",
                                 cancellationToken: __effectiveCancellationToken)).ConfigureAwait(false);
                         if (!__willRetry)
                         {
@@ -276,8 +325,7 @@ namespace Neuphonic
                         __httpRequest.Dispose();
                         __httpRequest = null;
                         await global::Neuphonic.AutoSDKRequestOptionsSupport.DelayBeforeRetryAsync(
-                            clientOptions: Options,
-                            requestOptions: requestOptions,
+                            retryDelay: __retryDelay,
                             cancellationToken: __effectiveCancellationToken).ConfigureAwait(false);
                         continue;
                     }
@@ -286,6 +334,11 @@ namespace Neuphonic
                         __attempt < __maxAttempts &&
                         global::Neuphonic.AutoSDKRequestOptionsSupport.ShouldRetryStatusCode(__response.StatusCode))
                     {
+                        var __retryDelay = global::Neuphonic.AutoSDKRequestOptionsSupport.GetRetryDelay(
+                            clientOptions: Options,
+                            requestOptions: requestOptions,
+                            response: __response,
+                            attempt: __attempt);
                         await global::Neuphonic.AutoSDKRequestOptionsSupport.OnAfterErrorAsync(
                             clientOptions: Options,
                             context: global::Neuphonic.AutoSDKRequestOptionsSupport.CreateHookContext(
@@ -302,14 +355,15 @@ namespace Neuphonic
                                 attempt: __attempt,
                                 maxAttempts: __maxAttempts,
                                 willRetry: true,
+                                retryDelay: __retryDelay,
+                                retryReason: "status:" + ((int)__response.StatusCode).ToString(global::System.Globalization.CultureInfo.InvariantCulture),
                                 cancellationToken: __effectiveCancellationToken)).ConfigureAwait(false);
                         __response.Dispose();
                         __response = null;
                         __httpRequest.Dispose();
                         __httpRequest = null;
                         await global::Neuphonic.AutoSDKRequestOptionsSupport.DelayBeforeRetryAsync(
-                            clientOptions: Options,
-                            requestOptions: requestOptions,
+                            retryDelay: __retryDelay,
                             cancellationToken: __effectiveCancellationToken).ConfigureAwait(false);
                         continue;
                     }
@@ -349,6 +403,8 @@ namespace Neuphonic
                                 attempt: __attemptNumber,
                                 maxAttempts: __maxAttempts,
                                 willRetry: false,
+                                retryDelay: null,
+                                retryReason: global::System.String.Empty,
                                 cancellationToken: __effectiveCancellationToken)).ConfigureAwait(false);
                 }
                 else
@@ -369,6 +425,8 @@ namespace Neuphonic
                                 attempt: __attemptNumber,
                                 maxAttempts: __maxAttempts,
                                 willRetry: false,
+                                retryDelay: null,
+                                retryReason: global::System.String.Empty,
                                 cancellationToken: __effectiveCancellationToken)).ConfigureAwait(false);
                 }
                             // Validation error.
@@ -431,9 +489,13 @@ namespace Neuphonic
                                 {
                                     __response.EnsureSuccessStatusCode();
 
-                                    return
-                                        global::Neuphonic.VoiceMutationResponse.FromJson(__content, JsonSerializerContext) ??
+                                    var __value = global::Neuphonic.VoiceMutationResponse.FromJson(__content, JsonSerializerContext) ??
                                         throw new global::System.InvalidOperationException($"Response deserialization failed for \"{__content}\" ");
+                                    return new global::Neuphonic.AutoSDKHttpResponse<global::Neuphonic.VoiceMutationResponse>(
+                                        statusCode: __response.StatusCode,
+                                        headers: global::Neuphonic.AutoSDKHttpResponse.CreateHeaders(__response),
+                                        requestUri: __response.RequestMessage?.RequestUri,
+                                        body: __value);
                                 }
                                 catch (global::System.Exception __ex)
                                 {
@@ -461,9 +523,13 @@ namespace Neuphonic
                 #endif
                                     ).ConfigureAwait(false);
 
-                                    return
-                                        await global::Neuphonic.VoiceMutationResponse.FromJsonStreamAsync(__content, JsonSerializerContext).ConfigureAwait(false) ??
+                                    var __value = await global::Neuphonic.VoiceMutationResponse.FromJsonStreamAsync(__content, JsonSerializerContext).ConfigureAwait(false) ??
                                         throw new global::System.InvalidOperationException("Response deserialization failed.");
+                                    return new global::Neuphonic.AutoSDKHttpResponse<global::Neuphonic.VoiceMutationResponse>(
+                                        statusCode: __response.StatusCode,
+                                        headers: global::Neuphonic.AutoSDKHttpResponse.CreateHeaders(__response),
+                                        requestUri: __response.RequestMessage?.RequestUri,
+                                        body: __value);
                                 }
                                 catch (global::System.Exception __ex)
                                 {

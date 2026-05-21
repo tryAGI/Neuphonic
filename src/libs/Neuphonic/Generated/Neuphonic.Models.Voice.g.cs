@@ -119,5 +119,6 @@ namespace Neuphonic
         public Voice()
         {
         }
+
     }
 }

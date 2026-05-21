@@ -64,5 +64,6 @@ namespace Neuphonic
         public CreateAgentRequest()
         {
         }
+
     }
 }
