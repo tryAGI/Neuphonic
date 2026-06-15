@@ -110,8 +110,8 @@ Update a cloned voice's name, tags, or reference audio.");
                         var voiceId = parseResult.GetRequiredValue(VoiceId);
                         var newVoiceName = parseResult.GetValue(NewVoiceName);
                         var newVoiceTags = parseResult.GetValue(NewVoiceTags);
-                        var newVoiceFile = CliRuntime.WasSpecified(parseResult, NewVoiceFile) ? parseResult.GetValue(NewVoiceFile) : __requestBase is not null ? __requestBase.NewVoiceFile : default;
-                        var newVoiceFilename = CliRuntime.WasSpecified(parseResult, NewVoiceFilename) ? parseResult.GetValue(NewVoiceFilename) : __requestBase is not null ? __requestBase.NewVoiceFilename : default;
+                        var newVoiceFile = CliRuntime.WasSpecified(parseResult, NewVoiceFile) ? parseResult.GetValue(NewVoiceFile) : (__requestBase is { } __NewVoiceFileBaseValue ? __NewVoiceFileBaseValue.NewVoiceFile : default);
+                        var newVoiceFilename = CliRuntime.WasSpecified(parseResult, NewVoiceFilename) ? parseResult.GetValue(NewVoiceFilename) : (__requestBase is { } __NewVoiceFilenameBaseValue ? __NewVoiceFilenameBaseValue.NewVoiceFilename : default);
                 using var client = await CliRuntime.CreateClientAsync(parseResult, cancellationToken).ConfigureAwait(false);
 
 
