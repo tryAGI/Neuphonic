@@ -40,6 +40,13 @@ using Neuphonic;
 using var client = new NeuphonicClient(apiKey);
 ```
 
+### CLI
+
+```bash
+dotnet tool install --global Neuphonic.CLI --prerelease
+neuphonic api --help
+```
+
 <!-- EXAMPLES:START -->
 ### List voices
 List voices available to the Neuphonic account.

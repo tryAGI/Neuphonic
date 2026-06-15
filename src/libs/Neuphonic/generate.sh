@@ -18,3 +18,20 @@ autosdk generate openapi.yaml \
   --targetFramework net10.0 \
   --output Generated \
   --exclude-deprecated-operations
+
+rm -rf ../../cli/Neuphonic.CLI
+
+autosdk cli-project openapi.yaml \
+  --output ../../cli/Neuphonic.CLI \
+  --sdk-project ../../libs/Neuphonic/Neuphonic.csproj \
+  --targetFramework net10.0 \
+  --namespace Neuphonic \
+  --clientClassName NeuphonicClient \
+  --package-id Neuphonic.CLI \
+  --tool-command-name neuphonic \
+  --user-secrets-id Neuphonic.CLI \
+  --api-key-env-var NEUPHONIC_API_KEY \
+  --base-url-env-var NEUPHONIC_BASE_URL \
+  --cli-credential-file \
+  --exclude-deprecated-operations \
+  --security-scheme ApiKey:Header:X-API-KEY
