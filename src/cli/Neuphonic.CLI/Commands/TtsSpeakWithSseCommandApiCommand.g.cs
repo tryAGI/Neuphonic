@@ -136,13 +136,13 @@ base64 encoded audio plus the source text and sampling rate.
                         var apiKey = parseResult.GetValue(ApiKey);
                         var jwtToken = parseResult.GetValue(JwtToken);
                         var text = parseResult.GetRequiredValue(Text);
-                        var speed = CliRuntime.WasSpecified(parseResult, Speed) ? parseResult.GetValue(Speed) : __requestBase is not null ? __requestBase.Speed : default;
-                        var temperature = CliRuntime.WasSpecified(parseResult, Temperature) ? parseResult.GetValue(Temperature) : __requestBase is not null ? __requestBase.Temperature : default;
-                        var requestLangCode = CliRuntime.WasSpecified(parseResult, RequestLangCode) ? parseResult.GetValue(RequestLangCode) : __requestBase is not null ? __requestBase.LangCode : default;
-                        var voiceId = CliRuntime.WasSpecified(parseResult, VoiceId) ? parseResult.GetValue(VoiceId) : __requestBase is not null ? __requestBase.VoiceId : default;
-                        var samplingRate = CliRuntime.WasSpecified(parseResult, SamplingRate) ? parseResult.GetValue(SamplingRate) : __requestBase is not null ? __requestBase.SamplingRate : default;
-                        var encoding = CliRuntime.WasSpecified(parseResult, Encoding) ? parseResult.GetValue(Encoding) : __requestBase is not null ? __requestBase.Encoding : default;
-                        var outputFormat = CliRuntime.WasSpecified(parseResult, OutputFormat) ? parseResult.GetValue(OutputFormat) : __requestBase is not null ? __requestBase.OutputFormat : default;
+                        var speed = CliRuntime.WasSpecified(parseResult, Speed) ? parseResult.GetValue(Speed) : (__requestBase is { } __SpeedBaseValue ? __SpeedBaseValue.Speed : default);
+                        var temperature = CliRuntime.WasSpecified(parseResult, Temperature) ? parseResult.GetValue(Temperature) : (__requestBase is { } __TemperatureBaseValue ? __TemperatureBaseValue.Temperature : default);
+                        var requestLangCode = CliRuntime.WasSpecified(parseResult, RequestLangCode) ? parseResult.GetValue(RequestLangCode) : (__requestBase is { } __RequestLangCodeBaseValue ? __RequestLangCodeBaseValue.LangCode : default);
+                        var voiceId = CliRuntime.WasSpecified(parseResult, VoiceId) ? parseResult.GetValue(VoiceId) : (__requestBase is { } __VoiceIdBaseValue ? __VoiceIdBaseValue.VoiceId : default);
+                        var samplingRate = CliRuntime.WasSpecified(parseResult, SamplingRate) ? parseResult.GetValue(SamplingRate) : (__requestBase is { } __SamplingRateBaseValue ? __SamplingRateBaseValue.SamplingRate : default);
+                        var encoding = CliRuntime.WasSpecified(parseResult, Encoding) ? parseResult.GetValue(Encoding) : (__requestBase is { } __EncodingBaseValue ? __EncodingBaseValue.Encoding : default);
+                        var outputFormat = CliRuntime.WasSpecified(parseResult, OutputFormat) ? parseResult.GetValue(OutputFormat) : (__requestBase is { } __OutputFormatBaseValue ? __OutputFormatBaseValue.OutputFormat : default);
                 using var client = await CliRuntime.CreateClientAsync(parseResult, cancellationToken).ConfigureAwait(false);
 
 
