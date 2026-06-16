@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+install_autosdk_cli() {
+  dotnet tool update --global autosdk.cli --prerelease >/dev/null 2>&1 || \
+    dotnet tool install --global autosdk.cli --prerelease
+}
+
 # Manual OpenAPI source based on Neuphonic's official docs, SDKs, and live FastAPI spec:
 # - https://docs.neuphonic.com/build-group/text-to-speech
 # - https://docs.neuphonic.com/build-group/voice-cloning
@@ -8,8 +13,7 @@ set -euo pipefail
 # - https://github.com/neuphonic/pyneuphonic
 # - https://github.com/neuphonic/neuphonic-js
 # - https://api.neuphonic.com/openapi.json
-
-dotnet tool install --global autosdk.cli --prerelease
+install_autosdk_cli
 rm -rf Generated
 autosdk generate openapi.yaml \
   --security-scheme ApiKey:Header:X-API-KEY \
