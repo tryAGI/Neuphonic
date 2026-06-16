@@ -94,8 +94,8 @@ Create a Neuphonic conversational agent.");
                             global::Neuphonic.SourceGenerationContext.Default,
                             cancellationToken).ConfigureAwait(false);
                         var name = parseResult.GetRequiredValue(NameOption);
-                        var prompt = CliRuntime.WasSpecified(parseResult, Prompt) ? parseResult.GetValue(Prompt) : __requestBase is not null ? __requestBase.Prompt : default;
-                        var greeting = CliRuntime.WasSpecified(parseResult, Greeting) ? parseResult.GetValue(Greeting) : __requestBase is not null ? __requestBase.Greeting : default;
+                        var prompt = CliRuntime.WasSpecified(parseResult, Prompt) ? parseResult.GetValue(Prompt) : (__requestBase is { } __PromptBaseValue ? __PromptBaseValue.Prompt : default);
+                        var greeting = CliRuntime.WasSpecified(parseResult, Greeting) ? parseResult.GetValue(Greeting) : (__requestBase is { } __GreetingBaseValue ? __GreetingBaseValue.Greeting : default);
                 using var client = await CliRuntime.CreateClientAsync(parseResult, cancellationToken).ConfigureAwait(false);
 
 
