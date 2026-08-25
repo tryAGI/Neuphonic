@@ -171,26 +171,6 @@ namespace Neuphonic
             }
 
                             var __httpRequestContent = new global::System.Net.Http.MultipartFormDataContent();
-                            __httpRequestContent.Add(
-                                content: new global::System.Net.Http.StringContent(voiceId ?? string.Empty),
-                                name: "\"voice_id\"");
-
-                            if (newVoiceName != default)
-                            {
-
-                                __httpRequestContent.Add(
-                                    content: new global::System.Net.Http.StringContent(newVoiceName ?? string.Empty),
-                                    name: "\"new_voice_name\"");
-
-                            }
-                            if (newVoiceTags != default)
-                            {
-
-                                __httpRequestContent.Add(
-                                    content: new global::System.Net.Http.StringContent(newVoiceTags ?? string.Empty),
-                                    name: "\"new_voice_tags\"");
-
-                            }
                             if (request.NewVoiceFile != default)
                             {
 

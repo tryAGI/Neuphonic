@@ -176,26 +176,6 @@ namespace Neuphonic
             }
 
                             var __httpRequestContent = new global::System.Net.Http.MultipartFormDataContent();
-                            __httpRequestContent.Add(
-                                content: new global::System.Net.Http.StringContent(voiceName ?? string.Empty),
-                                name: "\"voice_name\"");
-
-                            if (voiceTags != default)
-                            {
-
-                                __httpRequestContent.Add(
-                                    content: new global::System.Net.Http.StringContent(voiceTags ?? string.Empty),
-                                    name: "\"voice_tags\"");
-
-                            }
-                            if (langCode != default)
-                            {
-
-                                __httpRequestContent.Add(
-                                    content: new global::System.Net.Http.StringContent(langCode ?? string.Empty),
-                                    name: "\"lang_code\"");
-
-                            }
                             var __contentVoiceFile = new global::System.Net.Http.ByteArrayContent(request.VoiceFile ?? global::System.Array.Empty<byte>());
                             __contentVoiceFile.Headers.ContentType = new global::System.Net.Http.Headers.MediaTypeHeaderValue(
                                 request.VoiceFilename is null
@@ -709,26 +689,6 @@ namespace Neuphonic
             }
 
                             var __httpRequestContent = new global::System.Net.Http.MultipartFormDataContent();
-                            __httpRequestContent.Add(
-                                content: new global::System.Net.Http.StringContent(voiceName ?? string.Empty),
-                                name: "\"voice_name\"");
-
-                            if (voiceTags != default)
-                            {
-
-                                __httpRequestContent.Add(
-                                    content: new global::System.Net.Http.StringContent(voiceTags ?? string.Empty),
-                                    name: "\"voice_tags\"");
-
-                            }
-                            if (langCode != default)
-                            {
-
-                                __httpRequestContent.Add(
-                                    content: new global::System.Net.Http.StringContent(langCode ?? string.Empty),
-                                    name: "\"lang_code\"");
-
-                            }
                             var __contentVoiceFile = new global::System.Net.Http.StreamContent(voiceFile);
                             __contentVoiceFile.Headers.ContentType = new global::System.Net.Http.Headers.MediaTypeHeaderValue(
                                 request.VoiceFilename is null
@@ -1192,26 +1152,6 @@ namespace Neuphonic
             }
 
                             var __httpRequestContent = new global::System.Net.Http.MultipartFormDataContent();
-                            __httpRequestContent.Add(
-                                content: new global::System.Net.Http.StringContent(voiceName ?? string.Empty),
-                                name: "\"voice_name\"");
-
-                            if (voiceTags != default)
-                            {
-
-                                __httpRequestContent.Add(
-                                    content: new global::System.Net.Http.StringContent(voiceTags ?? string.Empty),
-                                    name: "\"voice_tags\"");
-
-                            }
-                            if (langCode != default)
-                            {
-
-                                __httpRequestContent.Add(
-                                    content: new global::System.Net.Http.StringContent(langCode ?? string.Empty),
-                                    name: "\"lang_code\"");
-
-                            }
                             var __contentVoiceFile = new global::System.Net.Http.StreamContent(voiceFile);
                             __contentVoiceFile.Headers.ContentType = new global::System.Net.Http.Headers.MediaTypeHeaderValue(
                                 request.VoiceFilename is null
