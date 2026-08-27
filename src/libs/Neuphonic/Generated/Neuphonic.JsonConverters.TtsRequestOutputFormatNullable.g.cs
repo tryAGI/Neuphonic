@@ -20,7 +20,7 @@ namespace Neuphonic.JsonConverters
                     {
                         return global::Neuphonic.TtsRequestOutputFormatExtensions.ToEnum(stringValue);
                     }
-                    
+
                     break;
                 }
                 case global::System.Text.Json.JsonTokenType.Number:

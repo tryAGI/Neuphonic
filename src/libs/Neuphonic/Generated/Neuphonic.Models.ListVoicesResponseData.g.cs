@@ -4,12 +4,12 @@
 namespace Neuphonic
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public sealed partial class ListVoicesResponseData
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [global::System.Text.Json.Serialization.JsonPropertyName("voices")]
         [global::System.Text.Json.Serialization.JsonRequired]

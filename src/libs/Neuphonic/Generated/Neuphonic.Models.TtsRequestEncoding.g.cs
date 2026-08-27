@@ -10,11 +10,11 @@ namespace Neuphonic
     public enum TtsRequestEncoding
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         PcmLinear,
         /// <summary>
-        /// 
+        ///
         /// </summary>
         PcmMulaw,
     }
