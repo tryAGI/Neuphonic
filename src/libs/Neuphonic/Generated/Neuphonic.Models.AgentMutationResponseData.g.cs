@@ -4,18 +4,18 @@
 namespace Neuphonic
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public sealed partial class AgentMutationResponseData
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [global::System.Text.Json.Serialization.JsonPropertyName("message")]
         public string? Message { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [global::System.Text.Json.Serialization.JsonPropertyName("agent_id")]
         public string? AgentId { get; set; }
