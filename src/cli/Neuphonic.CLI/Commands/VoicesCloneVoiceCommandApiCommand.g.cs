@@ -60,6 +60,8 @@ internal static partial class VoicesCloneVoiceCommandApiCommand
                     static partial void CustomizeResponseFormatHints(Dictionary<string, CliFormatHint> hints);
 
 
+    static partial void CustomizeCommand(ref Command command);
+
     public static Command Create()
     {
         var command = new Command(@"clone-voice", @"Clone voice
@@ -98,6 +100,7 @@ Clone a new voice from an uploaded audio sample.");
                                     FormatResponse,
                                     cancellationToken).ConfigureAwait(false);
             }, cancellationToken).ConfigureAwait(false));
+        CustomizeCommand(ref command);
         return command;
     }
 }

@@ -33,6 +33,8 @@ internal static partial class TtsCreateSseJwtTokenCommandApiCommand
                     static partial void CustomizeResponseFormatHints(Dictionary<string, CliFormatHint> hints);
 
 
+    static partial void CustomizeCommand(ref Command command);
+
     public static Command Create()
     {
         var command = new Command(@"create-sse-jwt-token", @"Create SSE JWT token
@@ -59,6 +61,7 @@ Exchange an API key for a short-lived JWT token for lower-latency SSE requests."
                                     FormatResponse,
                                     cancellationToken).ConfigureAwait(false);
             }, cancellationToken).ConfigureAwait(false));
+        CustomizeCommand(ref command);
         return command;
     }
 }
