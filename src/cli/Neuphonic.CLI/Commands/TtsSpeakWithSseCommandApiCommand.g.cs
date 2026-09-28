@@ -90,6 +90,8 @@ internal static partial class TtsSpeakWithSseCommandApiCommand
           Hidden = true,
       };
 
+    static partial void CustomizeCommand(ref Command command);
+
     public static Command Create()
     {
         var command = new Command(@"speak-with-sse", @"Text to speech over SSE
@@ -169,6 +171,7 @@ base64 encoded audio plus the source text and sampling rate.
                                         cancellationToken: cancellationToken).ConfigureAwait(false);
                                 }
             }, cancellationToken).ConfigureAwait(false));
+        CustomizeCommand(ref command);
         return command;
     }
 }
