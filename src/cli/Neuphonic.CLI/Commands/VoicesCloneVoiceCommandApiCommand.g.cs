@@ -62,9 +62,9 @@ internal static partial class VoicesCloneVoiceCommandApiCommand
 
     static partial void CustomizeCommand(ref Command command);
 
-    public static Command Create()
+    public static Command Create(string? commandName = null)
     {
-        var command = new Command(@"clone-voice", @"Clone voice
+        var command = new Command(commandName ?? @"clone-voice", @"Clone voice
 Clone a new voice from an uploaded audio sample.");
                         command.Options.Add(VoiceName);
                         command.Options.Add(VoiceTags);

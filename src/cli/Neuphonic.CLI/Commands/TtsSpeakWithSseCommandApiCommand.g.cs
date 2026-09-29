@@ -92,9 +92,9 @@ internal static partial class TtsSpeakWithSseCommandApiCommand
 
     static partial void CustomizeCommand(ref Command command);
 
-    public static Command Create()
+    public static Command Create(string? commandName = null)
     {
-        var command = new Command(@"speak-with-sse", @"Text to speech over SSE
+        var command = new Command(commandName ?? @"speak-with-sse", @"Text to speech over SSE
 Generate speech from text using Server-Sent Events. Each event contains
 base64 encoded audio plus the source text and sampling rate.
 ");
