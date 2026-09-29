@@ -63,9 +63,9 @@ internal static partial class AgentsCreateAgentCommandApiCommand
 
     static partial void CustomizeCommand(ref Command command);
 
-    public static Command Create()
+    public static Command Create(string? commandName = null)
     {
-        var command = new Command(@"create-agent", @"Create agent
+        var command = new Command(commandName ?? @"create-agent", @"Create agent
 Create a Neuphonic conversational agent.");
                         command.Arguments.Add(NameOption);
                         command.Options.Add(Prompt);

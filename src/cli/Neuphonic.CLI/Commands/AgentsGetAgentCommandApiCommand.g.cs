@@ -35,9 +35,9 @@ internal static partial class AgentsGetAgentCommandApiCommand
 
     static partial void CustomizeCommand(ref Command command);
 
-    public static Command Create()
+    public static Command Create(string? commandName = null)
     {
-        var command = new Command(@"get-agent", @"Get agent
+        var command = new Command(commandName ?? @"get-agent", @"Get agent
 Get details for a specific agent.");
                         command.Arguments.Add(AgentId);
 

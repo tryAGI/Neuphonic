@@ -35,9 +35,9 @@ internal static partial class AgentsDeleteAgentCommandApiCommand
 
     static partial void CustomizeCommand(ref Command command);
 
-    public static Command Create()
+    public static Command Create(string? commandName = null)
     {
-        var command = new Command(@"delete-agent", @"Delete agent
+        var command = new Command(commandName ?? @"delete-agent", @"Delete agent
 Delete a specific agent.");
                         command.Arguments.Add(AgentId);
 

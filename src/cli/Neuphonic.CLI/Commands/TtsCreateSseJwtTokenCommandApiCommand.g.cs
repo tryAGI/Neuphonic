@@ -35,9 +35,9 @@ internal static partial class TtsCreateSseJwtTokenCommandApiCommand
 
     static partial void CustomizeCommand(ref Command command);
 
-    public static Command Create()
+    public static Command Create(string? commandName = null)
     {
-        var command = new Command(@"create-sse-jwt-token", @"Create SSE JWT token
+        var command = new Command(commandName ?? @"create-sse-jwt-token", @"Create SSE JWT token
 Exchange an API key for a short-lived JWT token for lower-latency SSE requests.");
                         command.Options.Add(Expiration);
 
