@@ -14,5 +14,6 @@ rootCommand.Subcommands.Add(AuthCommand.Create());
 rootCommand.Subcommands.Add(AgentsApiGroupCommand.Create());
 rootCommand.Subcommands.Add(TtsApiGroupCommand.Create());
 rootCommand.Subcommands.Add(VoicesApiGroupCommand.Create());
+rootCommand.Subcommands.Add(CliCompletion.CreateCommand(rootCommand, @"neuphonic"));
 
 return await rootCommand.Parse(args).InvokeAsync().ConfigureAwait(false);
