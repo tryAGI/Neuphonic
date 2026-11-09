@@ -18,7 +18,7 @@ namespace Neuphonic.JsonConverters
                     var stringValue = reader.GetString();
                     if (stringValue != null)
                     {
-                        return global::Neuphonic.TtsRequestEncodingExtensions.ToEnum(stringValue) ?? default;
+                        return global::Neuphonic.TtsRequestEncodingExtensions.ToEnum(stringValue) ?? throw new global::System.Text.Json.JsonException($"Unknown value '{stringValue}' for global::Neuphonic.TtsRequestEncoding.");
                     }
 
                     break;
